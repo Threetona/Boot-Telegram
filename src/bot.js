@@ -1,38 +1,30 @@
-const { Telegraf } = require('telegraf')
-const bot = new Telegraf('6629597449:AAH8c_aBjFaTkakzy_IbXMC5JUvBX4wGwwc')
-const axios = require('axios')
+const { Telegraf } = require('telegraf');
+// const fetch = require('node-fetch');
+const axios = require('axios');
 
-bot.command('start', ctx => {
-    // ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, '📌 APPROVAL DOCUMENT\n📌 FRM-FSS-031\n📌 Nodoc: CFX/001/23/I/XXX', {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    { text: 'Approval', callback_data: 'Approval' }
-                ],
-                [
-                    { text: 'Disapproval', callback_data: 'Disapproval' }
-                ],
-            ]
-        }
-    })
-})
+const bot = new Telegraf('6585083528:AAFGrBwhztXeHrgmomY8w8Gi365U5D6mF3c');
 
-bot.action('Approval', ctx => {
-    // ctx.deleteMessage();
-    bot.telegram.sendMessage(ctx.chat.id, '✅ Done Thank you', {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    { text: 'Back to main menu', callback_data: 'menu' }
-                ]
-            ]
-        }
-    });
-})
+bot.start(async (ctx) => {
+    const welcome = `⚈ <b>Selamat Datang</b> ⚈\n\n🔎 Notifikasi Dokumen PPIC\n\n➾ Untuk Mendapatkan informasi silahkan lakukan Verifikasi data terlebih dahulu\n\n➾  Gunakanlah Media Sosial dengan Bijak \n\n ➾ your ID : ${ctx.from.id}`;
+    await ctx.replyWithHTML(`${welcome}`);
+  
+    // Verifikasi data atau tindakan pengguna di sini
+    // Misalnya, Anda dapat meminta pengguna untuk memasukkan nama atau informasi lainnya.
+  
+    // Setelah verifikasi data, kirim notifikasi
+    await sendNotification(ctx.from.id, 'Ini adalah notifikasi dari bot PPIC.');
+});
 
-bot.launch()
+async function sendNotification(userId, message) {
+    try {
+        await bot.telegram.sendMessage(userId, message);
+    } catch (error) {
+        console.error('Gagal mengirim notifikasi:', error);
+    }
+}
+
+bot.launch();
 
 // Enable graceful stop
-// process.once('SIGINT', () => bot.stop('SIGINT'))
-// process.once('SIGTERM', () => bot.stop('SIGTERM'))
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
